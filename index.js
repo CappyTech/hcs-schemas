@@ -31,4 +31,5 @@ module.exports = {
   nominal:   require('./lib/nominal'),
   note:      require('./lib/note'),
   vatRate:   require('./lib/vatRate'),
+  bankAccount: require('./lib/bankAccount'),
 };
