@@ -2,6 +2,23 @@
 
 All notable changes to hcs-schemas will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/). Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-09
+
+### Added
+Ten new KashFlow entity definitions, extending API parity toward the full KashFlow v2 surface. Each exports the usual `{ collection, fields, indexes }` and is wired into `index.js`:
+
+- **`bankTransaction`** (`banktransactions`) — per-account transactions from `GET /bankaccounts/{accountId}/transactions`. Unique sparse `Id`, compound `AccountId+Date`.
+- **`journal`** (`journals`) — `GET /journals`; `Lines` kept as Mixed (line shape undocumented).
+- **`product`** (`products`) — `GET /products`; stock fields included.
+- **`purchaseOrder`** (`purchaseorders`) — `GET /purchaseorders`; mirrors the purchase shape with `DeliveryDate`/`Category`.
+- **`purchaseOrderCategory`** (`purchaseordercategories`) and **`quoteCategory`** (`quotecategories`) — `{Number, Name, IconId, IconType, IconColor}` with unique `Number`.
+- **`currency`** (`currencies`) — `GET /currencies`.
+- **`country`** (`countries`) — `GET /countries` (`Id`, `Code`, `Name`, `IsEU`).
+- **`accountingPeriod`** (`accountingperiods`) — `GET /accountingperiods`.
+- **`vatReturn`** (`vatreturns`) — `GET /vatreturns`; full Box1–Box9 + submission/ECSL metadata.
+
+Test suite now asserts all 20 exported entities.
+
 ## [1.0.2] - 2026-07-08
 
 ### Added

@@ -8,9 +8,12 @@ describe('hcs-schemas', () => {
   const entityNames = [
     'customer', 'supplier', 'invoice', 'purchase',
     'quote', 'project', 'nominal', 'note', 'vatRate',
+    'bankAccount', 'bankTransaction', 'journal', 'product',
+    'purchaseOrder', 'purchaseOrderCategory', 'quoteCategory',
+    'currency', 'country', 'accountingPeriod', 'vatReturn',
   ];
 
-  it('exports all 9 entities', () => {
+  it('exports all entities', () => {
     for (const name of entityNames) {
       assert.ok(schemas[name], `missing entity: ${name}`);
     }
