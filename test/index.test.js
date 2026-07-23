@@ -1,8 +1,6 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const schemas = require('../index');
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import schemas from '../index.js';
 
 describe('hcs-schemas', () => {
   const entityNames = [
@@ -64,5 +62,13 @@ describe('hcs-schemas', () => {
     const a = schemas.uuidField.default();
     const b = schemas.uuidField.default();
     assert.notEqual(a, b);
+  });
+
+  it('named exports match default export', async () => {
+    const named = await import('../index.js');
+    for (const name of entityNames) {
+      assert.equal(named[name], schemas[name], `named export mismatch: ${name}`);
+    }
+    assert.equal(named.uuidField, schemas.uuidField);
   });
 });

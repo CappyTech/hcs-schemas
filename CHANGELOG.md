@@ -2,6 +2,15 @@
 
 All notable changes to hcs-schemas will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/). Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-07-23
+
+### Changed
+- **Package converted from CommonJS to ESM** (`"type": "module"`). All `lib/*.js` files now use `export default`; `index.js` provides both named exports (`import { customer, uuidField } from '@cappytech/hcs-schemas'`) and a default export (`import schemas from '@cappytech/hcs-schemas'`), so both existing consumer styles keep working unchanged.
+- Added an `exports` map (`".": "./index.js"`).
+
+### Breaking
+- CommonJS consumers can no longer `require('@cappytech/hcs-schemas')` on Node < 20.19 (Node 20.19+/22.12+ support `require(esm)`). hcs-app and hcs-sync both consume it via `import` from their ESM builds.
+
 ## [1.1.0] - 2026-07-09
 
 ### Added
