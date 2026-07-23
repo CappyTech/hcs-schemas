@@ -1,6 +1,4 @@
-'use strict';
-
-const crypto = require('crypto');
+import crypto from 'node:crypto';
 
 /**
  * Shared REST schema definitions for hcs-app and hcs-sync.
@@ -13,6 +11,27 @@ const crypto = require('crypto');
  * with their own options (timestamps, strict, sync metadata, etc.).
  */
 
+import customer from './lib/customer.js';
+import supplier from './lib/supplier.js';
+import invoice from './lib/invoice.js';
+import purchase from './lib/purchase.js';
+import quote from './lib/quote.js';
+import project from './lib/project.js';
+import nominal from './lib/nominal.js';
+import note from './lib/note.js';
+import vatRate from './lib/vatRate.js';
+import bankAccount from './lib/bankAccount.js';
+import bankTransaction from './lib/bankTransaction.js';
+import journal from './lib/journal.js';
+import product from './lib/product.js';
+import purchaseOrder from './lib/purchaseOrder.js';
+import purchaseOrderCategory from './lib/purchaseOrderCategory.js';
+import quoteCategory from './lib/quoteCategory.js';
+import currency from './lib/currency.js';
+import country from './lib/country.js';
+import accountingPeriod from './lib/accountingPeriod.js';
+import vatReturn from './lib/vatReturn.js';
+
 const uuidField = {
   type: String,
   unique: true,
@@ -20,26 +39,50 @@ const uuidField = {
   default: () => crypto.randomUUID(),
 };
 
-module.exports = {
+export {
   uuidField,
-  customer:  require('./lib/customer'),
-  supplier:  require('./lib/supplier'),
-  invoice:   require('./lib/invoice'),
-  purchase:  require('./lib/purchase'),
-  quote:     require('./lib/quote'),
-  project:   require('./lib/project'),
-  nominal:   require('./lib/nominal'),
-  note:      require('./lib/note'),
-  vatRate:   require('./lib/vatRate'),
-  bankAccount: require('./lib/bankAccount'),
-  bankTransaction: require('./lib/bankTransaction'),
-  journal:   require('./lib/journal'),
-  product:   require('./lib/product'),
-  purchaseOrder: require('./lib/purchaseOrder'),
-  purchaseOrderCategory: require('./lib/purchaseOrderCategory'),
-  quoteCategory: require('./lib/quoteCategory'),
-  currency:  require('./lib/currency'),
-  country:   require('./lib/country'),
-  accountingPeriod: require('./lib/accountingPeriod'),
-  vatReturn: require('./lib/vatReturn'),
+  customer,
+  supplier,
+  invoice,
+  purchase,
+  quote,
+  project,
+  nominal,
+  note,
+  vatRate,
+  bankAccount,
+  bankTransaction,
+  journal,
+  product,
+  purchaseOrder,
+  purchaseOrderCategory,
+  quoteCategory,
+  currency,
+  country,
+  accountingPeriod,
+  vatReturn,
+};
+
+export default {
+  uuidField,
+  customer,
+  supplier,
+  invoice,
+  purchase,
+  quote,
+  project,
+  nominal,
+  note,
+  vatRate,
+  bankAccount,
+  bankTransaction,
+  journal,
+  product,
+  purchaseOrder,
+  purchaseOrderCategory,
+  quoteCategory,
+  currency,
+  country,
+  accountingPeriod,
+  vatReturn,
 };
