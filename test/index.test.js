@@ -6,7 +6,7 @@ describe('hcs-schemas', () => {
   const entityNames = [
     'customer', 'supplier', 'invoice', 'purchase',
     'quote', 'project', 'nominal', 'note', 'vatRate',
-    'bankAccount', 'bankTransaction', 'journal', 'product',
+    'bankAccount', 'bankTransaction', 'bankReconciliation', 'journal', 'product',
     'purchaseOrder', 'purchaseOrderCategory', 'quoteCategory',
     'currency', 'country', 'accountingPeriod', 'vatReturn',
   ];
@@ -51,6 +51,58 @@ describe('hcs-schemas', () => {
   it('purchase exports paymentLineFields', () => {
     assert.equal(typeof schemas.purchase.paymentLineFields, 'object');
     assert.ok(schemas.purchase.paymentLineFields.Amount === Number);
+  });
+
+  it('invoice exports paymentLineFields', () => {
+    assert.equal(typeof schemas.invoice.paymentLineFields, 'object');
+    assert.ok(schemas.invoice.paymentLineFields.Amount === Number);
+  });
+
+  it('invoice keeps PaymentLines in fields for backward compatibility', () => {
+    // A consumer that only spreads `...invoice.fields` (hcs-app before 2.1.0)
+    // must still get PaymentLines, or it silently loses them on the next build
+    // — the schemas dependency is a branch tip, so that happens with no version
+    // bump. Consumers wanting typing set PaymentLines after the spread.
+    assert.deepEqual(schemas.invoice.fields.PaymentLines, [{}]);
+  });
+
+  it('purchase omits PaymentLines from fields', () => {
+    // Unlike invoices, every purchase consumer already wraps paymentLineFields,
+    // so a stray [{}] here would just be dead weight.
+    assert.equal(schemas.purchase.fields.PaymentLines, undefined);
+  });
+
+  it('both payment line shapes carry the fields reconciliation joins on', () => {
+    for (const name of ['invoice', 'purchase']) {
+      const pl = schemas[name].paymentLineFields;
+      assert.equal(pl.Date, Date, `${name}.PaymentLines.Date must be a Date`);
+      assert.equal(pl.AccountId, Number, `${name}.PaymentLines.AccountId`);
+      assert.equal(pl.BulkPaymentNumber, Number, `${name}.PaymentLines.BulkPaymentNumber`);
+      // Undocumented upstream, but present on every live payload and the only
+      // link to KashFlow's own reconciliation.
+      assert.equal(pl.BankReconciliationId, Number, `${name}.PaymentLines.BankReconciliationId`);
+    }
+  });
+
+  it('bankTransaction declares the document-link fields', () => {
+    // EntityName + ResourceNumber is how a bank line resolves to the document
+    // it settles. Both must be declared, not left to strict:false.
+    assert.equal(schemas.bankTransaction.fields.EntityName, String);
+    assert.equal(schemas.bankTransaction.fields.ResourceNumber, Number);
+  });
+
+  it('bankReconciliation keys on the composite, not a bare Id', () => {
+    // KashFlow's reconciliation Id is only known to be unique within an
+    // account, so a bare unique index on Id could collide across accounts.
+    const unique = schemas.bankReconciliation.indexes.filter(i => i.options?.unique);
+    assert.equal(unique.length, 1);
+    assert.deepEqual(unique[0].fields, { ReconKey: 1 });
+    assert.equal(schemas.bankReconciliation.fields.ReconKey, String);
+  });
+
+  it('bankReconciliation exports transactionFields', () => {
+    assert.equal(typeof schemas.bankReconciliation.transactionFields, 'object');
+    assert.equal(schemas.bankReconciliation.transactionFields.PaidIn, Number);
   });
 
   it('supplier CISRate has enum constraint', () => {
