@@ -22,6 +22,7 @@ import note from './lib/note.js';
 import vatRate from './lib/vatRate.js';
 import bankAccount from './lib/bankAccount.js';
 import bankTransaction from './lib/bankTransaction.js';
+import bankReconciliation from './lib/bankReconciliation.js';
 import journal from './lib/journal.js';
 import product from './lib/product.js';
 import purchaseOrder from './lib/purchaseOrder.js';
@@ -52,6 +53,7 @@ export {
   vatRate,
   bankAccount,
   bankTransaction,
+  bankReconciliation,
   journal,
   product,
   purchaseOrder,
@@ -76,6 +78,7 @@ export default {
   vatRate,
   bankAccount,
   bankTransaction,
+  bankReconciliation,
   journal,
   product,
   purchaseOrder,
