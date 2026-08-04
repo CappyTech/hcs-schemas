@@ -35,12 +35,33 @@ cross-checks them.
 3. `npm version minor` (new entities/fields) or `patch`; `git push --follow-tags`
 4. Update `@cappytech/hcs-schemas` in hcs-app and hcs-sync
 
-> **Deploy-order hazard.** Both consumers depend on
-> `"@cappytech/hcs-schemas": "github:CappyTech/hcs-schemas"` — a *branch-tip*
-> git dependency, not a version range. Pushing `main` changes what the next
-> image build of **both** repos installs, with no version bump required and no
-> signal that anything changed. Keep every change additive, or pin both
-> consumers to a tag (`#v2.1.0`) in the same change that lands the schema edit.
+> **Merging here does not reach the consumers on its own.** Both depend on
+> `"@cappytech/hcs-schemas": "github:CappyTech/hcs-schemas"`, which looks like a
+> branch tip but is **pinned to a commit in their lockfiles**:
+>
+> ```
+> resolved: git+ssh://…/hcs-schemas.git#489f2a1…   version: 2.0.0
+> ```
+>
+> Their CI installs with `npm ci`, which honours that pin. Pushing `main` here
+> therefore changes nothing downstream until someone runs
+> `npm install github:CappyTech/hcs-schemas` in each consumer and commits the
+> updated lockfile. That is a required, explicit step — do it in the same
+> change that needs the new schema.
+>
+> This bit once: hcs-sync 0.10.0 shipped to production built against 2.0.0 and
+> came up without the `bankReconciliation` entity. It stayed healthy only
+> because the consumer guards its use of new entities (see below), which is why
+> those guards are worth keeping.
+>
+> The upside is that a schema change cannot silently alter a consumer's build.
+> The cost is that it cannot silently *fix* one either. Keep changes additive
+> regardless, so a consumer pinned to an older commit still works.
+>
+> **Guard new entities in consumers.** `schemas.newThing` will be `undefined`
+> against an older pin, and `buildSchema(undefined)` throws at import time —
+> taking down the whole consumer over one optional collection. Both consumers
+> now branch on presence and degrade to "that entity is not available".
 
 ## Gotchas found in live data
 
