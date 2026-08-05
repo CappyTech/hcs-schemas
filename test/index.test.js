@@ -91,6 +91,21 @@ describe('hcs-schemas', () => {
     assert.equal(schemas.bankTransaction.fields.ResourceNumber, Number);
   });
 
+  it('bankTransaction keys on (AccountId, Id), not a bare Id', () => {
+    // An internal transfer is two ledger lines sharing one KashFlow Id, one per
+    // account. A unique index on Id alone merges them and the per-account sync
+    // then overwrites one half with the other on every run.
+    const unique = schemas.bankTransaction.indexes.filter(i => i.options?.unique);
+    assert.equal(unique.length, 1);
+    assert.deepEqual(unique[0].fields, { AccountId: 1, Id: 1 });
+
+    // Id must stay indexed for lookups by KashFlow id, just not uniquely.
+    const byId = schemas.bankTransaction.indexes
+      .find(i => Object.keys(i.fields).length === 1 && i.fields.Id === 1);
+    assert.ok(byId, 'expected a single-field index on Id');
+    assert.ok(!byId.options?.unique, 'the Id index must not be unique');
+  });
+
   it('bankReconciliation keys on the composite, not a bare Id', () => {
     // KashFlow's reconciliation Id is only known to be unique within an
     // account, so a bare unique index on Id could collide across accounts.
