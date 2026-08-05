@@ -2,6 +2,34 @@
 
 All notable changes to hcs-schemas will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/). Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [3.0.0] - 2026-08-05
+
+### Changed
+- **BREAKING — `bankTransaction` is keyed on `(AccountId, Id)`, not `Id`.** The
+  unique index on `Id` alone was wrong: an internal transfer between two company
+  accounts is **two ledger lines**, and KashFlow returns the same transaction
+  `Id` in both accounts' feeds, each rendered from that account's point of view
+  (`PaidIn`/`PaidOut` swapped, `Balance` being that account's running balance,
+  `Type` naming the *other* account, `TransactionType` 0 vs 6). Uniqueness on
+  `Id` merged the two halves into one document, so hcs-sync's per-account
+  fan-out overwrote one side with the other on every run.
+
+  Observed on the live mirror before the fix: 422 documents rewritten twice per
+  hourly sync (844 modifications, never converging), and because the accounts
+  are synced in list order the counterparty account always wrote last — the main
+  trading account's half of every transfer was never the version that survived.
+  483 lines fetched under account 611594 were stored under some other account,
+  so they were absent from its ledger entirely and its running balance could not
+  close. hcs-app's `bankTransferService` — which exists to pair the two halves of
+  a transfer — was matching against data the merge had already destroyed.
+
+  `Id` remains indexed, non-uniquely: it identifies the *transfer*, not the
+  ledger line. **Any consumer resolving a single line by `Id` must now pass
+  `AccountId` as well**, or it gets an arbitrary half.
+
+  Migration: drop the legacy `Id_1` unique index before writing both halves, or
+  the second write of each pair fails with a duplicate key error.
+
 ## [2.1.0] - 2026-08-03
 
 Groundwork for bank reconciliation in hcs-app. Additive: no field is removed or
