@@ -9,10 +9,12 @@ Shared REST schema field definitions for **hcs-app** and **hcs-sync**.
   destructure** — never named imports. That is the interop path that works
   across the 1.x (CJS) → 2.x (ESM) boundary, so app and schema releases are not
   deploy-order-coupled.
-- **21 entities:** customer, supplier, invoice, purchase, quote, project,
+- **23 entities:** customer, supplier, invoice, purchase, quote, project,
   nominal, note, vatRate, bankAccount, bankTransaction, bankReconciliation,
   journal, product, purchaseOrder, purchaseOrderCategory, quoteCategory,
-  currency, country, accountingPeriod, vatReturn.
+  currency, country, accountingPeriod, vatReturn, and (3.1.0+)
+  the payroll-provider entities payrollEmployee, payrollPayRunEntry, which live
+  in their own `staffology` database, not the accounting mirror.
 
 ## Structure
 
