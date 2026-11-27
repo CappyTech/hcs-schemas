@@ -56,6 +56,14 @@ describe('hcs-schemas', () => {
     assert.ok(schemas.payrollPayRunEntry.totalsFields.Gross === Number);
   });
 
+  it('payrollPayRunEntry carries the basic pay options paid that period', () => {
+    const f = schemas.payrollPayRunEntry.fields;
+    assert.equal(f.PayBasis, String);
+    for (const k of ['BaseHourlyRate', 'BaseDailyRate', 'PayAmount', 'PayAmountMultiplier']) {
+      assert.equal(f[k], Number, k);
+    }
+  });
+
   it('purchase exports paymentLineFields', () => {
     assert.equal(typeof schemas.purchase.paymentLineFields, 'object');
     assert.ok(schemas.purchase.paymentLineFields.Amount === Number);

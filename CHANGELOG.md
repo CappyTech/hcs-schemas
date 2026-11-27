@@ -2,6 +2,11 @@
 
 All notable changes to hcs-schemas will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/). Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [3.2.0] - 2026-11-27
+
+### Added
+- `payrollPayRunEntry` gains optional `PayBasis`, `BaseHourlyRate`, `BaseDailyRate`, `PayAmount` and `PayAmountMultiplier`: the basic pay options of that pay run entry, i.e. the rate actually paid that period and the hours or days paid at it. Additive; existing documents without them stay valid.
+
 ## [3.1.0] - 2026-11-27
 
 ### Added

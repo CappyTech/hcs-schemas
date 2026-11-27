@@ -41,7 +41,7 @@ These are provider-neutral: `Source` names the provider (`'staffology'` today) a
 | Entity | Collection | Notes |
 |---|---|---|
 | `payrollEmployee` | `payrollemployees` | Payroll code, name, status, pay basis, period and rates. Keyed on `(Source, ExternalId)`. |
-| `payrollPayRunEntry` | `payrollpayrunentries` | One employee's line in one pay run: tax year (start year, so 2026 = 2026/27), period, start/end/payment dates, closed flag, `Totals`, `PayLines`. Keyed on `(Source, ExternalId)`. Also exports `totalsFields` and `payLineFields`. |
+| `payrollPayRunEntry` | `payrollpayrunentries` | One employee's line in one pay run: tax year (start year, so 2026 = 2026/27), period, start/end/payment dates, closed flag, the basic pay options paid that period (`PayBasis`, `BaseHourlyRate`, `BaseDailyRate`, `PayAmount`, `PayAmountMultiplier`), `Totals`, `PayLines`. Keyed on `(Source, ExternalId)`. Also exports `totalsFields` and `payLineFields`. |
 
 No NI numbers, dates of birth, addresses or bank details: hcs-app matches employees by `PayrollCode` against its own `employee.payroll.payrollId`.
 
