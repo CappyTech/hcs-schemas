@@ -2,6 +2,11 @@
 
 All notable changes to hcs-schemas will be documented here. Format follows [Keep a Changelog](https://keepachangelog.com/). Versioning follows [Semantic Versioning](https://semver.org/).
 
+## [3.1.0] - 2026-11-27
+
+### Added
+- `payrollEmployee` (collection `payrollemployees`) and `payrollPayRunEntry` (collection `payrollpayrunentries`): employees and per-employee pay run results from an external payroll provider (Staffology first). Provider-neutral, keyed on `(Source, ExternalId)`. Meant for their own database, not the accounting mirror. No NI numbers or bank details. Employees match to hcs-app by `PayrollCode`.
+
 ## [3.0.0] - 2026-08-05
 
 ### Changed

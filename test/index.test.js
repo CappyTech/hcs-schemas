@@ -48,6 +48,14 @@ describe('hcs-schemas', () => {
     });
   }
 
+  it('payroll entities are keyed on (Source, ExternalId)', () => {
+    for (const name of ['payrollEmployee', 'payrollPayRunEntry']) {
+      const idx = schemas[name].indexes.find((i) => i.options?.unique);
+      assert.deepEqual(idx.fields, { Source: 1, ExternalId: 1 });
+    }
+    assert.ok(schemas.payrollPayRunEntry.totalsFields.Gross === Number);
+  });
+
   it('purchase exports paymentLineFields', () => {
     assert.equal(typeof schemas.purchase.paymentLineFields, 'object');
     assert.ok(schemas.purchase.paymentLineFields.Amount === Number);

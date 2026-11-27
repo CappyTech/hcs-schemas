@@ -32,6 +32,8 @@ import currency from './lib/currency.js';
 import country from './lib/country.js';
 import accountingPeriod from './lib/accountingPeriod.js';
 import vatReturn from './lib/vatReturn.js';
+import payrollEmployee from './lib/payrollEmployee.js';
+import payrollPayRunEntry from './lib/payrollPayRunEntry.js';
 
 const uuidField = {
   type: String,
@@ -63,6 +65,8 @@ export {
   country,
   accountingPeriod,
   vatReturn,
+  payrollEmployee,
+  payrollPayRunEntry,
 };
 
 export default {
@@ -88,4 +92,6 @@ export default {
   country,
   accountingPeriod,
   vatReturn,
+  payrollEmployee,
+  payrollPayRunEntry,
 };
